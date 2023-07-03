@@ -1,0 +1,6 @@
+audmetric
+audobject
+hydra-core
+pandas
+numpy
+torch

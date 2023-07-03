@@ -1,0 +1,14 @@
+meta:
+  audio_features: ???  # path to CSV with audio features
+  text_features: ???  # path to CSV with text features
+  results_root: ???  # path to store results in
+  device: cuda:0
+  split: random
+hparams:
+  batch_size: 256
+  learning_rate: 0.001
+  optimizer: SGD
+  epochs: 10
+  seed: 23
+  compatibility: dot_product
+  loss: ranking
