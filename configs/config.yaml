@@ -4,11 +4,16 @@ meta:
   results_root: ???  # path to store results in
   device: cuda:0
   split: random
+  model: transformer
+  embeddings_are_2D: False
+  use_predefined_clf_sets: True
+  predefined_clf_splits: "/nas/staff/data_work/AG/BIRDS/bird_classification"
 hparams:
   batch_size: 256
-  learning_rate: 0.001
+  learning_rate: 0.0001
   optimizer: SGD
   epochs: 10
   seed: 23
   compatibility: dot_product
   loss: ranking
+  normalisation_type: column

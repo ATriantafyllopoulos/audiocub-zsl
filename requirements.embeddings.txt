@@ -1,3 +1,3 @@
 librosa
-transformer
+transformers
 panns-inference
