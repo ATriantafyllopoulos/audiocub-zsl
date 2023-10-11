@@ -23,7 +23,7 @@ from data import (
     Standardizer,
     random_split
 )
-from loss_own import (
+from loss import (
     ranking_loss,
     devise_loss
 )

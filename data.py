@@ -16,7 +16,7 @@ def min_max_scaling(matrix):
 
 
 class Dataset2D(torch.utils.data.Dataset):
-    r"""Torch dataset for ZSL.
+    r"""Torch dataset for ZSL with 2D audio features.
 
     Accepts as input one DataFrame.
     Returns audio and target class.
@@ -35,10 +35,6 @@ class Dataset2D(torch.utils.data.Dataset):
     ):
         self.audio = audio
         self._normalize = normalize
-        # print("\nAudio DS2D init:\n", audio.head(5))
-        # self._audio_names = list(
-        #     set(self.audio.columns) - set(["species"])
-        # )
         self.transform = transform
 
     def __len__(self):
@@ -47,23 +43,16 @@ class Dataset2D(torch.utils.data.Dataset):
     def __getitem__(self, item):
         species = self.audio.loc[item, "species"]
         audio_path = self.audio.loc[item, "features"]
-        # print("\nself.audio.head(5):\n", self.audio.head(5))
-        # print("Item: ", item)
-        # print("Species: ", species)
-        # print("audio_path: ", audio_path)
-        # sys.exit()
 
         audio = np.load(audio_path)
         # MinMax scaling
         if self._normalize:
-            # audio = min_max_scaling(audio)
             min_max_scaler = preprocessing.MinMaxScaler()
             audio = min_max_scaler.fit_transform(audio)
 
         if self.transform is not None:
             audio = self.transform(audio)
 
-        # return audio.astype(np.float32), species
         return audio.astype(np.float32), species
 
 
@@ -138,22 +127,6 @@ class Standardizer(audobject.Object):
         return self.encode(x)
 
 
-# class StandardizerMinMax2D(audobject.Object):
-#     r"""Helper class to normalize features."""
-#     def __init__(self, original_min: float, original_max: float):
-#         self.original_min = original_min
-#         self.original_max = original_min
-        
-#     def encode(self, x):
-#         return (x - self.original_min) / (self.original_max - self.original_min)
-
-#     def decode(self, x):
-#         return x * (self.original_max - self.original_min) + self.original_min
-
-#     def __call__(self, x):
-#         return self.encode(x)
-
-
 
 def random_split(species, test_percentage=0.1):
     r"""Utility function used to split data.
@@ -170,10 +143,10 @@ def random_split(species, test_percentage=0.1):
     return train_species, dev_species, test_species
 
 
-def load_split_for_fold(mapping, fold_dir="/nas/staff/data_work/AG/BIRDS/zsl-5fold", fold_idx=1):
-    r"""Utility function used to create predefined splits for k-fold cross-validation
+def load_split_for_fold(mapping, fold_dir, fold_idx=1):
+    r"""Utility function used to load predefined splits for k-fold cross-validation
 
-    Accepts as input the directory containing the folds as well as the
+    Accepts as input the mapping of synonym species, the directory containing the folds, as well as the
     fold number. It returns the species for the train, dev, and test set of the selected fold.
     """
     src_path = os.path.join(fold_dir, str(fold_idx))

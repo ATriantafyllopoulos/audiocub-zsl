@@ -26,7 +26,7 @@ from data import (
     random_split,
     load_split_for_fold
 )
-from loss_own import (
+from loss import (
     ranking_loss,
     devise_loss,
     ranking_loss_UNCol,
@@ -70,9 +70,7 @@ def train_epoch(
             compatibility_function=compatibility_function,
             model=model
         )
-        # loss = total_loss.sum() # why sum and not mean?
         loss = total_loss.mean() 
-        # print("Loss mean: ", loss)
 
         if index % 50 == 0:
             writer.add_scalar(
@@ -129,7 +127,7 @@ def evaluate(
 def main(cfg):
     embeddings_are_2D = cfg.meta.embeddings_are_2D
     use_predefined_clf_sets = cfg.meta.use_predefined_clf_sets
-    fold_dir = cfg.meta.predefined_clf_splits
+    fold_dir = cfg.meta.predefined_clf_split
 
     # set random seeds for reproducibility
     torch.manual_seed(cfg.hparams.seed)
@@ -152,10 +150,10 @@ def main(cfg):
         ###############################################
 
         # Load mapping dictionary
-        with open("/nas/staff/data_work/AG/BIRDS/baseline_embeddings/mapping.json", "r") as f:
+        with open(cfg.meta.mapping_path, "r") as f:
             mapping = json.load(f)
 
-        # Check if pre-defined zsl splits shall be used and load them if that's the case
+        # Check if pre-defined clf splits shall be used and load them if that's the case
         if use_predefined_clf_sets:
             # Load the overall ast data
             audio = pd.read_csv(cfg.meta.audio_features).dropna()
@@ -219,8 +217,6 @@ def main(cfg):
             
             if not embeddings_are_2D:
                 feature_names = list(set(audio.columns) - set(["filename", "species"]))
-                # print("Feature names: ", feature_names)
-                # audio = audio.drop(["filename"], axis=1) # TODO: maybe drop anyways?
                 for col in feature_names:
                     audio[col] = audio[col].astype(float)
             else:
@@ -262,8 +258,6 @@ def main(cfg):
 
             if not embeddings_are_2D:
                 feature_names = list(set(audio.columns) - set(["filename", "species"]))
-                # print("Feature names: ", feature_names)
-                # audio = audio.drop(["filename"], axis=1) # TODO: maybe drop anyways?
                 for col in feature_names:
                     audio[col] = audio[col].astype(float)
             else:
@@ -342,7 +336,7 @@ def main(cfg):
 
         else:
             if cfg.meta.split == "predefined_zsl_folds":
-                train_species, dev_species, test_species = splitting_function(mapping=mapping, fold_idx=fold_id)
+                train_species, dev_species, test_species = splitting_function(mapping=mapping, fold_dir=cfg.meta.predefined_zsl_folds, fold_idx=fold_id)
             else:
                 train_species, dev_species, test_species = splitting_function(list(audio["species"].unique()))
             species_lists = {
