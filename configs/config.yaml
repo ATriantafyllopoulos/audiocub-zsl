@@ -4,11 +4,18 @@ meta:
   results_root: ???  # path to store results in
   device: cuda:0
   split: random
+  model: linear
+  embeddings_are_2D: False
+  use_predefined_clf_sets: False
+  predefined_clf_split: ??? # path to the folder containing the predefined zsl classification split (train, devel, test csvs), e.g. "./splits/bird_classification"
+  predefined_zsl_splits: ??? # path to the folder containing the five splits with each having (train, devel, test csvs), e.g. "./splits/zsl-5fold"
+  mapping_path: ??? # Path to the json file containing the mapping dictionary # e.g. ./embeddings/baseline_embeddings/mapping.json
 hparams:
-  batch_size: 256
-  learning_rate: 0.001
+  batch_size: 16
+  learning_rate: 0.0001
   optimizer: SGD
-  epochs: 10
+  epochs: 30
   seed: 23
   compatibility: dot_product
   loss: ranking
+  normalisation_type: column
