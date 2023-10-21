@@ -62,7 +62,10 @@ def main(cfg):
     label = 'species'
     embeddings = 'class_embeddings'
     filename = 'filename'
-    device = cfg.meta.device
+
+    meta_info = cfg.meta
+
+    device = meta_info.device
 
     results_folder = cfg.meta.results_root
     os.makedirs(results_folder, exist_ok=True)
@@ -74,13 +77,17 @@ def main(cfg):
         fold_results = os.path.join(results_folder, str(fold))
 
         audio = pd.read_csv(cfg.meta.audio_features).dropna()
-        image = pd.read_csv(cfg.meta.image_features)
+
+        feature_source = meta_info.image_features if meta_info.meta_type == 'image' else meta_info.numeric_features
+
+        meta = pd.read_csv(feature_source)
+
 
         audio[label] = audio[filename].apply(lambda x: x.split('/')[0])
         audio[filename] = audio[filename].apply(lambda x: x.split('/')[1])
 
         min_max_scaler = preprocessing.MinMaxScaler()
-        image.iloc[:, 1:] = min_max_scaler.fit_transform(image.iloc[:, 1:])
+        meta.iloc[:, 1:] = min_max_scaler.fit_transform(meta.iloc[:, 1:])
 
         feature_names = list(set(audio.columns) - {"filename", label})
 
@@ -96,17 +103,17 @@ def main(cfg):
 
         for split in species_lists.keys():
             split_audio = audio.loc[audio[label].isin(species_lists[split])].reset_index()
-            split_image = image.loc[image[label].isin(species_lists[split])]
+            split_meta = meta.loc[meta[label].isin(species_lists[split])]
 
             encoder = LabelEncoder(split_audio[label].unique())
             split_audio[label] = split_audio[label].apply(encoder.encode)
-            split_image[label] = split_image[label].apply(encoder.encode)
+            split_meta[label] = split_meta[label].apply(encoder.encode)
 
             encoder.to_yaml(os.path.join(fold_results, f"encoder.{split}.yaml"))
 
-            split_image = split_image.sort_values(by=label)
+            split_meta = split_meta.sort_values(by=label)
 
-            class_embeddings = torch.from_numpy(split_image[list(set(split_image.columns) - {label})]
+            class_embeddings = torch.from_numpy(split_meta[list(set(split_meta.columns) - {label})]
                                                 .values).float().to(device)
 
             if split == "train":
@@ -123,7 +130,7 @@ def main(cfg):
 
         writer = SummaryWriter(log_dir=os.path.join(fold_results, 'log'))
 
-        model = torch.nn.Linear(len(feature_names), len(set(image.columns) - {label}), bias=False)
+        model = torch.nn.Linear(len(feature_names), len(set(meta.columns) - {label}), bias=False)
 
         batch_size = cfg.hparams.batch_size
 
@@ -137,7 +144,7 @@ def main(cfg):
 
         loss_func = get_loss_function(hyperparams.loss)
         comp_func = get_compatibility_function(hyperparams.compatibility)
-        epochs = cfg.hparams.epochs
+        epochs = hyperparams.epochs
 
         best_epoch, best_state, best_results = None, None, None
         best_metric = 0

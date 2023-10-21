@@ -2,7 +2,9 @@ meta:
   audio_features: '/media/zunaron/Daten/Uni - Augsburg/9. Semester/Projektarbeit/CUB-200 Scripts/Embeddings/Audio/combined_data.csv'
   image_features: '/media/zunaron/Daten/Uni - Augsburg/9. Semester/Projektarbeit/CUB-200 Scripts/Embeddings/Image/combined_data.csv'
   text_features: ???  # path to CSV with text features
-  results_root: '/media/zunaron/Daten/Uni - Augsburg/9. Semester/Projektarbeit/Results-combined'  # path to store results in
+  numeric_features: '/media/zunaron/Daten/Uni - Augsburg/9. Semester/Projektarbeit/CUB-200 Scripts/Embeddings/Numerical/avonet.csv'
+  meta_type: 'numeric'
+  results_root: '/media/zunaron/Daten/Uni - Augsburg/9. Semester/Projektarbeit/Results_avonet_combined'  # path to store results in
   device: cuda:0
   split: random
   model: linear
