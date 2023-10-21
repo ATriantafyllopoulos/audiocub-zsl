@@ -1,7 +1,8 @@
 meta:
-  audio_features: ???  # path to CSV with audio features
+  audio_features: '/media/zunaron/Daten/Uni - Augsburg/9. Semester/Projektarbeit/CUB-200 Scripts/Embeddings/Audio/combined_data.csv'
+  image_features: '/media/zunaron/Daten/Uni - Augsburg/9. Semester/Projektarbeit/CUB-200 Scripts/Embeddings/Image/combined_data.csv'
   text_features: ???  # path to CSV with text features
-  results_root: ???  # path to store results in
+  results_root: '/media/zunaron/Daten/Uni - Augsburg/9. Semester/Projektarbeit/Results-combined'  # path to store results in
   device: cuda:0
   split: random
   model: linear
