@@ -1,16 +1,19 @@
+import random
+
+import audmetric
+import numpy as np
+import torch
 from torch.optim import SGD, Adam, AdamW, RMSprop
-from data import random_split, load_split_for_fold
-from loss import ranking_loss, devise_loss, ranking_loss_UNCol, ranking_loss_UNRow
+
 from compatibility import (
     dot_product_compatibility,
     euclidean_distance_compatibility,
     cosine_similarity_compatibility,
     manhattan_distance_compatibility
 )
-import numpy as np
-import random
-import torch
-import audmetric
+from data import random_split, load_split_for_fold
+from loss import ranking_loss, devise_loss, ranking_loss_UNCol, ranking_loss_UNRow
+
 
 def set_random_seed(seed):
     torch.manual_seed(seed)
@@ -55,9 +58,19 @@ def get_splitting_function(splitting_name):
     }
     return splitting_functions[splitting_name]
 
+
 def get_metrics():
     return {
         "ACC": audmetric.accuracy,
         "UAR": audmetric.unweighted_average_recall,
         "F1": audmetric.unweighted_average_fscore
     }
+
+
+def get_meta_source(meta_type, cfg):
+    meta_sources = {
+        'image': cfg.meta.image_features,
+        'numeric': cfg.meta.numeric_features,
+        'text': cfg.meta.text_features,
+    }
+    return meta_sources[meta_type]

@@ -15,6 +15,7 @@ from util_simplified import (
     get_compatibility_function,
     get_loss_function,
     get_splitting_function,
+    get_meta_source,
     set_random_seed, get_metrics
 )
 
@@ -63,9 +64,7 @@ def main(cfg):
     embeddings = 'class_embeddings'
     filename = 'filename'
 
-    meta_info = cfg.meta
-
-    device = meta_info.device
+    device = cfg.meta.device
 
     results_folder = cfg.meta.results_root
     os.makedirs(results_folder, exist_ok=True)
@@ -73,15 +72,14 @@ def main(cfg):
     results_list = []
     metrics = get_metrics()
 
-    for fold in tqdm(range(5)):
+    for fold in tqdm(range(1)):
         fold_results = os.path.join(results_folder, str(fold))
 
         audio = pd.read_csv(cfg.meta.audio_features).dropna()
 
-        feature_source = meta_info.image_features if meta_info.meta_type == 'image' else meta_info.numeric_features
+        feature_source = get_meta_source(cfg.meta.meta_type, cfg)
 
         meta = pd.read_csv(feature_source)
-
 
         audio[label] = audio[filename].apply(lambda x: x.split('/')[0])
         audio[filename] = audio[filename].apply(lambda x: x.split('/')[1])
