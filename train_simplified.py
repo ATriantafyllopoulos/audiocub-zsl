@@ -72,7 +72,7 @@ def main(cfg):
     results_list = []
     metrics = get_metrics()
 
-    for fold in tqdm(range(1)):
+    for fold in tqdm(range(5)):
         fold_results = os.path.join(results_folder, str(fold))
 
         audio = pd.read_csv(cfg.meta.audio_features).dropna()
@@ -91,8 +91,14 @@ def main(cfg):
 
         audio[feature_names] = audio[feature_names].astype(float)
 
-        splitting_function = get_splitting_function(cfg.meta.split)
-        train_species, dev_species, test_species = splitting_function(list(audio[label].unique()))
+        split_type = cfg.meta.split
+        split_func = get_splitting_function(split_type)
+
+        params = ((list(audio[label].unique()))) if split_type == 'random' else (
+            cfg.meta.predefined_zsl_folds, fold, label
+        )
+
+        train_species, dev_species, test_species = split_func(*params)
 
         species_lists = {"train": train_species, "dev": dev_species, "test": test_species}
 

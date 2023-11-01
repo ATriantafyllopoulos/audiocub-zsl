@@ -1,10 +1,10 @@
 meta:
   audio_features: '/media/zunaron/Daten/Uni - Augsburg/9. Semester/Projektarbeit/CUB-200 Scripts/Embeddings/Audio/ast-embeddings-botw.csv'
   image_features: '/media/zunaron/Daten/Uni - Augsburg/9. Semester/Projektarbeit/CUB-200 Scripts/Embeddings/Image/combined_data.csv'
-  text_features: '/media/zunaron/Daten/Uni - Augsburg/9. Semester/Projektarbeit/CUB-200 Scripts/Embeddings/Text/bert-base-uncased-v2.csv'
+  text_features: '/media/zunaron/Daten/Uni - Augsburg/9. Semester/Projektarbeit/CUB-200 Scripts/Embeddings/Text/v3_bert.csv'
   numeric_features: '/media/zunaron/Daten/Uni - Augsburg/9. Semester/Projektarbeit/CUB-200 Scripts/Embeddings/Numerical/avonet.csv'
   meta_type: 'text'
-  results_root: '/media/zunaron/Daten/Uni - Augsburg/9. Semester/Projektarbeit/temp4'  # path to store results in
+  results_root: '/media/zunaron/Daten/Uni - Augsburg/9. Semester/Projektarbeit/v3_bert'  # path to store results in
   device: cuda:0
   split: random
   model: linear

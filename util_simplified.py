@@ -1,7 +1,9 @@
+import os
 import random
 
 import audmetric
 import numpy as np
+import pandas as pd
 import torch
 from torch.optim import SGD, Adam, AdamW, RMSprop
 
@@ -54,9 +56,19 @@ def get_compatibility_function(compatibility_name):
 def get_splitting_function(splitting_name):
     splitting_functions = {
         "random": random_split,
-        "predefined_zsl_folds": load_split_for_fold,
+        "predefined": load_split_for_fold,
     }
     return splitting_functions[splitting_name]
+
+
+def predefined(split_dir, fold_id, label):
+    target_dir = os.path.join(split_dir, str(fold_id))
+
+    train = pd.read_csv(os.path.join(target_dir, 'train.csv'))[label].tolist()
+    dev = pd.read_csv(os.path.join(target_dir, 'dev.csv'))[label].tolist()
+    test = pd.read_csv(os.path.join(target_dir, 'test.csv'))[label].tolist()
+
+    return train, dev, test
 
 
 def get_metrics():
