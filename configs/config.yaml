@@ -1,17 +1,17 @@
 meta:
-  audio_features: '/media/zunaron/Daten/Uni - Augsburg/9. Semester/Projektarbeit/CUB-200 Scripts/Embeddings/Audio/ast-embeddings-botw.csv'
-  image_features: '/media/zunaron/Daten/Uni - Augsburg/9. Semester/Projektarbeit/CUB-200 Scripts/Embeddings/Image/combined_data.csv'
+  audio_features: '/media/zunaron/Daten/Uni - Augsburg/9. Semester/Projektarbeit/CUB-200 Scripts/Embeddings/Audio/ast-embeddings-xeno-canto.csv'
+  image_features: '/media/zunaron/Daten/Uni - Augsburg/9. Semester/Projektarbeit/CUB-200 Scripts/Embeddings/Image/vit-cub-200.csv'
   text_features: '/media/zunaron/Daten/Uni - Augsburg/9. Semester/Projektarbeit/CUB-200 Scripts/Embeddings/Text/v3_bert.csv'
   numeric_features: '/media/zunaron/Daten/Uni - Augsburg/9. Semester/Projektarbeit/CUB-200 Scripts/Embeddings/Numerical/avonet.csv'
-  meta_type: 'text'
-  results_root: '/media/zunaron/Daten/Uni - Augsburg/9. Semester/Projektarbeit/v3_bert'  # path to store results in
+  meta_type: 'image'
+  results_root: '/media/zunaron/Daten/Uni - Augsburg/9. Semester/Projektarbeit/IMG_cub-200_AUDIO_xeno-canto'  # path to store results in
   device: cuda:0
-  split: random
+  split: predefined
   model: linear
   embeddings_are_2D: False
-  use_predefined_clf_sets: False
+  use_predefined_clf_sets: True
   predefined_clf_split: ??? # path to the folder containing the predefined zsl classification split (train, devel, test csvs), e.g. "./splits/bird_classification"
-  predefined_zsl_splits: ??? # path to the folder containing the five splits with each having (train, devel, test csvs), e.g. "./splits/zsl-5fold"
+  predefined_zsl_splits: '../../../splits/cub-200'
   mapping_path: ??? # Path to the json file containing the mapping dictionary # e.g. ./embeddings/baseline_embeddings/mapping.json
 hparams:
   batch_size: 16

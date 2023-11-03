@@ -1,10 +1,7 @@
 import os
-import random
 
 import audmetric
-import numpy as np
 import pandas as pd
-import torch
 from torch.optim import SGD, Adam, AdamW, RMSprop
 
 from compatibility import (
@@ -13,14 +10,8 @@ from compatibility import (
     cosine_similarity_compatibility,
     manhattan_distance_compatibility
 )
-from data import random_split, load_split_for_fold
+from data import random_split
 from loss import ranking_loss, devise_loss, ranking_loss_UNCol, ranking_loss_UNRow
-
-
-def set_random_seed(seed):
-    torch.manual_seed(seed)
-    np.random.seed(seed)
-    random.seed(seed)
 
 
 def get_optimizer(optimizer_name, lr, params):
@@ -56,14 +47,13 @@ def get_compatibility_function(compatibility_name):
 def get_splitting_function(splitting_name):
     splitting_functions = {
         "random": random_split,
-        "predefined": load_split_for_fold,
+        "predefined": predefined,
     }
     return splitting_functions[splitting_name]
 
 
 def predefined(split_dir, fold_id, label):
     target_dir = os.path.join(split_dir, str(fold_id))
-
     train = pd.read_csv(os.path.join(target_dir, 'train.csv'))[label].tolist()
     dev = pd.read_csv(os.path.join(target_dir, 'dev.csv'))[label].tolist()
     test = pd.read_csv(os.path.join(target_dir, 'test.csv'))[label].tolist()

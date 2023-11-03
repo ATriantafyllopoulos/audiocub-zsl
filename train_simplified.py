@@ -1,4 +1,5 @@
 import os
+import random
 
 import numpy as np
 import pandas as pd
@@ -16,8 +17,14 @@ from util_simplified import (
     get_loss_function,
     get_splitting_function,
     get_meta_source,
-    set_random_seed, get_metrics
+    get_metrics
 )
+
+
+def set_random_seeds(seed):
+    torch.manual_seed(seed)
+    np.random.seed(seed)
+    random.seed(seed)
 
 
 def train_epoch(loader, model, class_emb, optimizer, device, comp_func, loss_func, writer, epoch):
@@ -58,7 +65,7 @@ def evaluate(loader, model, class_embeddings, device, comp_func, metrics):
 
 
 def main(cfg):
-    set_random_seed(cfg.hparams.seed)
+    set_random_seeds(cfg.hparams.seed)
 
     label = 'species'
     embeddings = 'class_embeddings'
@@ -95,7 +102,7 @@ def main(cfg):
         split_func = get_splitting_function(split_type)
 
         params = ((list(audio[label].unique()))) if split_type == 'random' else (
-            cfg.meta.predefined_zsl_folds, fold, label
+            cfg.meta.predefined_zsl_splits, fold, label
         )
 
         train_species, dev_species, test_species = split_func(*params)
