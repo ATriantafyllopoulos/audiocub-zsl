@@ -24,7 +24,7 @@ A sample bash call for running the code is:
 ```bash
 python main.py \
     meta.results_root="foo" \
-    meta.audio_features="/nas/staff/data_work/Andreas/HearTheSpecies/bird-recognition/bird-description-fusion/ast.csv" \
+    meta.audio_features="./embeddings/baseline_embeddings/ast.csv" \
     meta.text_features="./embeddings/baseline_embeddings/bert_embeddings.csv" \
     meta.mapping_path="./embeddings/baseline_embeddings/mapping.json" \
     meta.predefined_clf_splits="./splits/bird_classification/"
