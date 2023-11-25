@@ -24,6 +24,6 @@ birds = ["Columba oenas", "Columba palumbus", "Corvus corax", "Hooded crow", "Ca
          "Troglodytes troglodytes", "Turdus iliacus", "Turdus merula", "Turdus philomelos", "Picus canus",
          "Turdus pilaris", "Turdus viscivorus", "Vanellus vanellus"]
 
-q = Query(name=birds[0], len_lt=60)
+q = Query(name=birds[0])
 
 q.retrieve_recordings(multiprocess=False, attempts=10, outdir="datasets/")
